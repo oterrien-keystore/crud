@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
-public class NullAwareBeanUtilsBean extends BeanUtilsBean {
+public final class NullAwareBeanUtilsBean extends BeanUtilsBean {
 
     private final List<String> propertiesToKeep;
 

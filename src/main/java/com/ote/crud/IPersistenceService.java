@@ -4,13 +4,15 @@ import com.ote.crud.exception.CreateException;
 import com.ote.crud.exception.MergeException;
 import com.ote.crud.exception.ResetException;
 import com.ote.crud.model.*;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
 public interface IPersistenceService<TP extends IPayload> {
 
-    //region READER
     Optional<TP> findOne(long id);
 
     List<TP> findMany(Filters filters);
@@ -24,19 +26,13 @@ public interface IPersistenceService<TP extends IPayload> {
     default SplitList<TP> findAll(SortingParameters sortingParam, SplitListParameter splitListParam) {
         return findMany(null, sortingParam, splitListParam);
     }
-    //endregion
 
-    //region CREATE
     TP create(TP payload) throws CreateException;
-    //endregion
 
-    //region UPDATE
     Optional<TP> reset(long id, TP payload) throws ResetException;
 
     Optional<TP> merge(long id, TP payload) throws MergeException;
-    //endregion
 
-    //region DELETE
     void deleteOne(long id);
 
     void deleteMany(Filters filters);
@@ -44,5 +40,4 @@ public interface IPersistenceService<TP extends IPayload> {
     default void deleteAll() {
         deleteMany(null);
     }
-    //endregion
 }
