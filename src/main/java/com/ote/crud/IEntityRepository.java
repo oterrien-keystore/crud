@@ -8,5 +8,4 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface IEntityRepository<TE extends IEntity> extends JpaRepository<TE, Long>, JpaSpecificationExecutor<TE> {
 
-
 }

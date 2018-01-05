@@ -1,6 +1,6 @@
 package com.ote.crud;
 
-import com.ote.crud.JsonUtils;
+import com.ote.common.JsonUtils;
 import com.ote.crud.model.Filters;
 import com.ote.crud.model.SortingParameters;
 import com.ote.crud.model.SplitListParameter;

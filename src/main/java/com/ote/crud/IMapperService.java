@@ -16,5 +16,5 @@ public interface IMapperService<TP extends IPayload, TE extends IEntity> {
 
     TE convert(TP payload);
 
-    TP convert(TE payload);
+    TP convert(TE entity);
 }
