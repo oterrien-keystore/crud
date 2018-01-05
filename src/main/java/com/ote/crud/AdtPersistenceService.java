@@ -4,6 +4,7 @@ import com.ote.crud.exception.CreateException;
 import com.ote.crud.exception.MergeException;
 import com.ote.crud.exception.ResetException;
 import com.ote.crud.model.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -11,15 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.validation.annotation.Validated;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +32,8 @@ public abstract class AdtPersistenceService<TP extends IPayload, TE extends IEnt
     protected final String entityName;
 
     @Value("${page.default.size}")
-    protected int defaultPageSize;
+    @Getter
+    private int defaultPageSize;
 
     @Override
     public Optional<TP> findOne(long id) {
