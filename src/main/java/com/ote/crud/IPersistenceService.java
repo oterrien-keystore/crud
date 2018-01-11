@@ -24,7 +24,7 @@ public interface IPersistenceService<TP extends IPayload> {
 
     <TE extends IEntity> IEntityRepository<TE> getEntityRepository();
 
-    <TE extends IEntity> IMapperService<TP, TE> getMapperService();
+    //<TE extends IEntity> IMapperService<TP, TE> getMapperService();
 
     String getEntityName();
 
@@ -32,7 +32,7 @@ public interface IPersistenceService<TP extends IPayload> {
 
     default Optional<TP> findOne(long id) {
         return Optional.ofNullable(getEntityRepository().findOne(id)).
-                map(getMapperService()::convert);
+                map(IEntity::convert);
     }
 
     default List<TP> findMany(Filters filters) {
@@ -43,7 +43,7 @@ public interface IPersistenceService<TP extends IPayload> {
             Specification<IEntity> filterSpecification = getFilter(filters);
             list = getEntityRepository().findAll(filterSpecification);
         }
-        return list.stream().map(getMapperService()::convert).collect(Collectors.toList());
+        return list.stream().map(IEntity::<TP>convert).collect(Collectors.toList());
     }
 
     default SplitList<TP> findMany(Filters filters, SortingParameters sortingParam, SplitListParameter splitListParam) {
@@ -63,8 +63,8 @@ public interface IPersistenceService<TP extends IPayload> {
     default TP create(TP payload) throws CreateException {
         try {
             payload.setId(0);
-            IEntity entity = getMapperService().convert(payload);
-            return getMapperService().convert(getEntityRepository().save(entity));
+            IEntity entity = payload.convert();
+            return getEntityRepository().save(entity).convert();
         } catch (Exception e) {
             throw new CreateException(getEntityName(), e);
         }
@@ -73,9 +73,9 @@ public interface IPersistenceService<TP extends IPayload> {
     default Optional<TP> reset(long id, TP payload) throws ResetException {
         try {
             if (getEntityRepository().exists(id)) {
-                IEntity entity = getMapperService().convert(payload);
+                IEntity entity = payload.convert();
                 entity.setId(id);
-                return Optional.of(getEntityRepository().save(entity)).map(getMapperService()::convert);
+                return Optional.of(getEntityRepository().save(entity)).map(IEntity::convert);
             } else {
                 return Optional.empty();
             }
@@ -88,8 +88,8 @@ public interface IPersistenceService<TP extends IPayload> {
         try {
             Optional<IEntity> currentEntity = Optional.ofNullable(getEntityRepository().findOne(id));
             if (currentEntity.isPresent()) {
-                IEntity entity = getMapperService().convert(payload);
-                return Optional.of(merge(entity, currentEntity.get())).map(getMapperService()::convert);
+                IEntity entity = payload.convert();
+                return Optional.of(merge(entity, currentEntity.get())).map(IEntity::convert);
             } else {
                 return Optional.empty();
             }
@@ -158,7 +158,7 @@ public interface IPersistenceService<TP extends IPayload> {
         splitList.setSplitListParam(splitListParam);
         splitList.setTotalElements(page.getTotalElements());
         splitList.setTotalPages(page.getTotalPages());
-        splitList.setContent(page.map(getMapperService()::convert).getContent());
+        splitList.setContent(page.map(IEntity::<TP>convert).getContent());
         return splitList;
     }
 
