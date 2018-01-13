@@ -24,8 +24,6 @@ public interface IPersistenceService<TP extends IPayload> {
 
     <TE extends IEntity> IEntityRepository<TE> getEntityRepository();
 
-    //<TE extends IEntity> IMapperService<TP, TE> getMapperService();
-
     String getEntityName();
 
     int getDefaultPageSize();

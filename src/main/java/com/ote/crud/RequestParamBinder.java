@@ -13,7 +13,7 @@ import java.beans.PropertyEditorSupport;
 
 @ControllerAdvice
 @Slf4j
-public class RequestParamBinderControllerAdvice {
+public class RequestParamBinder {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
