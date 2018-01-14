@@ -17,28 +17,28 @@ public class PersistenceExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    Error handle(NotFoundException exception) {
+    public Error handle(NotFoundException exception) {
         log.error(exception.getMessage(), exception);
         return new Error(exception.getMessage());
     }
 
     @ExceptionHandler(CreateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    Error handle(CreateException exception) {
+    public Error handle(CreateException exception) {
         log.error(exception.getMessage(), exception);
         return new Error(exception.getMessage());
     }
 
     @ExceptionHandler(MergeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    Error handle(MergeException exception) {
+    public Error handle(MergeException exception) {
         log.error(exception.getMessage(), exception);
         return new Error(exception.getMessage());
     }
 
     @ExceptionHandler(ResetException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    Error handle(ResetException exception) {
+    public Error handle(ResetException exception) {
         log.error(exception.getMessage(), exception);
         return new Error(exception.getMessage());
     }
