@@ -15,43 +15,37 @@ import java.beans.PropertyEditorSupport;
 @Slf4j
 public class RequestParamBinder {
 
+    private static final String ErrorMessageTemplate = "Unable to parse %s into %s";
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(SplitListParameter.class, new PropertyEditorSupport() {
+        registerCustomEditor(binder, SplitListParameter.class);
+        registerCustomEditor(binder, Filters.class);
+        registerCustomEditor(binder, SortingParameters.class);
+    }
+
+    private <T> void registerCustomEditor(WebDataBinder binder, Class<T> clazz) {
+        binder.registerCustomEditor(clazz,
+                getPropertyEditorSupport(text -> JsonUtils.parse(text, clazz), clazz));
+    }
+
+    private <T> PropertyEditorSupport getPropertyEditorSupport(CustomFunction<T> parser, Class<T> clazz) {
+
+        return new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {
                 try {
-                    SplitListParameter param = JsonUtils.parse(text, SplitListParameter.class);
+                    T param = parser.parse(text);
                     this.setValue(param);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new IllegalArgumentException(String.format(ErrorMessageTemplate, text, clazz.getSimpleName()), e);
                 }
             }
+        };
+    }
 
-        });
-        binder.registerCustomEditor(Filters.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException {
-                try {
-                    Filters param = JsonUtils.parse(text, Filters.class);
-                    this.setValue(param);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-        });
-        binder.registerCustomEditor(SortingParameters.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) throws IllegalArgumentException {
-                try {
-                    SortingParameters param = JsonUtils.parse(text, SortingParameters.class);
-                    this.setValue(param);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-        });
+    @FunctionalInterface
+    private interface CustomFunction<T> {
+        T parse(String text) throws Exception;
     }
 }

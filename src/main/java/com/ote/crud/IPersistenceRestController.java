@@ -6,7 +6,6 @@ import com.ote.crud.exception.NotFoundException;
 import com.ote.crud.exception.ResetException;
 import com.ote.crud.model.*;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,10 +13,10 @@ public interface IPersistenceRestController<TP extends IPayload> {
 
     IPersistenceService<TP> getPersistenceService();
 
-    String getEntityName();
+    String getScope();
 
     default TP get(long id) throws NotFoundException {
-        return getPersistenceService().findOne(id).orElseThrow(() -> new NotFoundException(getEntityName(), id));
+        return getPersistenceService().findOne(id).orElseThrow(() -> new NotFoundException(getScope(), id));
     }
 
     default SplitList<TP> get(Filters filters,
@@ -27,11 +26,11 @@ public interface IPersistenceRestController<TP extends IPayload> {
     }
 
     default TP reset(long id, @NotNull @Validated(IPayload.CreatingValidationType.class) TP payload) throws ResetException, NotFoundException {
-        return getPersistenceService().reset(id, payload).orElseThrow(() -> new NotFoundException(getEntityName(), id));
+        return getPersistenceService().reset(id, payload).orElseThrow(() -> new NotFoundException(getScope(), id));
     }
 
     default TP merge(long id, @NotNull @Validated(IPayload.CreatingValidationType.class) TP payload) throws MergeException, NotFoundException {
-        return getPersistenceService().merge(id, payload).orElseThrow(() -> new NotFoundException(getEntityName(), id));
+        return getPersistenceService().merge(id, payload).orElseThrow(() -> new NotFoundException(getScope(), id));
     }
 
     default TP create(@NotNull @Validated(IPayload.CreatingValidationType.class) TP payload) throws CreateException {

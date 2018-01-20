@@ -2,9 +2,9 @@ package com.ote.crud.exception;
 
 public class MergeException extends Exception {
 
-    private final static String ErrorMessageTemplate = "Unable to merge entity '%s' for id '%s'";
+    private final static String ErrorMessageWithReasonTemplate = "Unable to merge entity '%s' for id '%s' : %s";
 
-    public MergeException(String entityName, long id, Exception e) {
-        super(String.format(ErrorMessageTemplate, entityName, id), e);
+    public MergeException(String entityName, long id, String reason, Exception e) {
+        super(String.format(ErrorMessageWithReasonTemplate, entityName, id, reason), e);
     }
 }

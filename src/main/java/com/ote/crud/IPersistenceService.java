@@ -5,6 +5,7 @@ import com.ote.crud.exception.CreateException;
 import com.ote.crud.exception.MergeException;
 import com.ote.crud.exception.ResetException;
 import com.ote.crud.model.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ public interface IPersistenceService<TP extends IPayload> {
 
     <TE extends IEntity> IEntityRepository<TE> getEntityRepository();
 
-    String getEntityName();
+    String getScope();
 
     int getDefaultPageSize();
 
@@ -63,8 +64,10 @@ public interface IPersistenceService<TP extends IPayload> {
             payload.setId(0);
             IEntity entity = payload.convert();
             return getEntityRepository().save(entity).convert();
+        } catch (DataIntegrityViolationException e) {
+            throw new CreateException(getScope(), e.getCause().getCause().getMessage(), e);
         } catch (Exception e) {
-            throw new CreateException(getEntityName(), e);
+            throw new CreateException(getScope(), e.getMessage(), e);
         }
     }
 
@@ -77,8 +80,10 @@ public interface IPersistenceService<TP extends IPayload> {
             } else {
                 return Optional.empty();
             }
+        } catch (DataIntegrityViolationException e) {
+            throw new ResetException(getScope(), id, e.getCause().getCause().getMessage(), e);
         } catch (Exception e) {
-            throw new ResetException(getEntityName(), id, e);
+            throw new ResetException(getScope(), id, e.getMessage(), e);
         }
     }
 
@@ -91,8 +96,10 @@ public interface IPersistenceService<TP extends IPayload> {
             } else {
                 return Optional.empty();
             }
+        } catch (DataIntegrityViolationException e) {
+            throw new MergeException(getScope(), id, e.getCause().getCause().getMessage(), e);
         } catch (Exception e) {
-            throw new MergeException(getEntityName(), id, e);
+            throw new MergeException(getScope(), id, e.getMessage(), e);
         }
     }
 

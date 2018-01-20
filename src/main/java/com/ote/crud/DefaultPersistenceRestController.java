@@ -11,5 +11,5 @@ public class DefaultPersistenceRestController<TP extends IPayload> implements IP
     private final IPersistenceService<TP> persistenceService;
 
     @Getter
-    private final String entityName;
+    private final String scope;
 }
