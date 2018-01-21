@@ -1,6 +1,6 @@
 package com.ote.crud;
 
-import com.ote.common.BeanUtils;
+import com.ote.common.NullAwareBeanUtilsBean;
 import com.ote.crud.exception.CreateException;
 import com.ote.crud.exception.MergeException;
 import com.ote.crud.exception.ResetException;
@@ -118,7 +118,7 @@ public interface IPersistenceService<TP extends IPayload> {
     }
 
     default IEntity merge(IEntity fromEntity, IEntity toEntity) throws Exception {
-        new BeanUtils("id").copyProperties(toEntity, fromEntity);
+        new NullAwareBeanUtilsBean("id").copyProperties(toEntity, fromEntity);
         return getEntityRepository().save(toEntity);
     }
 
