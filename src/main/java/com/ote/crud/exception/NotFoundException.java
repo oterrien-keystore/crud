@@ -7,4 +7,8 @@ public class NotFoundException extends Exception {
     public NotFoundException(String entityName, long id) {
         super(String.format(ErrorMessageTemplate, entityName, id));
     }
+
+    public NotFoundException(String message, Exception e) {
+        super(message, e);
+    }
 }
